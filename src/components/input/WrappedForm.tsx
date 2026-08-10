@@ -65,7 +65,6 @@ interface WrappedFormProps {
   errors: WrappedFormErrors;
   onChange: (key: keyof WrappedFormValues, value: string) => void;
   onSubmit: () => void;
-  onLoadSample: () => void;
 }
 
 export function WrappedForm({
@@ -73,7 +72,6 @@ export function WrappedForm({
   errors,
   onChange,
   onSubmit,
-  onLoadSample,
 }: WrappedFormProps) {
   return (
     <motion.form
@@ -100,22 +98,13 @@ export function WrappedForm({
           className="pointer-events-none absolute bottom-3 right-3 h-3 w-3 border-b border-r border-axis-accent/25"
         />
 
-        <div className="mb-3.5 flex items-end justify-between gap-4">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-axis-accent/80">
-              Profile stats
-            </p>
-            <p className="mt-0.5 text-xs text-axis-muted sm:text-sm">
-              Enter exactly what you see on Axis Hub.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onLoadSample}
-            className="shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] text-axis-muted transition-colors hover:text-axis-accent"
-          >
-            Load sample
-          </button>
+        <div className="mb-3.5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-axis-accent/80">
+            Profile stats
+          </p>
+          <p className="mt-0.5 text-xs text-white sm:text-sm">
+            Enter exactly what you see on Axis Hub.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
@@ -127,7 +116,7 @@ export function WrappedForm({
                 className={cn("group block", isUsername && "sm:col-span-2")}
               >
                 <span className="mb-1 flex items-center justify-between gap-2">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-axis-muted">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white">
                     {field.label}
                   </span>
                   {errors[field.key] && (
@@ -166,7 +155,7 @@ export function WrappedForm({
 
           <div className="block">
             <span className="mb-1 flex items-center justify-between gap-2">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-axis-muted">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white">
                 Badges total
               </span>
             </span>

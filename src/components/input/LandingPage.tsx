@@ -15,7 +15,6 @@ interface LandingPageProps {
   errors: WrappedFormErrors;
   onChange: (key: keyof WrappedFormValues, value: string) => void;
   onSubmit: () => void;
-  onLoadSample: () => void;
 }
 
 export function LandingPage({
@@ -23,7 +22,6 @@ export function LandingPage({
   errors,
   onChange,
   onSubmit,
-  onLoadSample,
 }: LandingPageProps) {
   const reduced = useReducedMotion();
 
@@ -116,7 +114,6 @@ export function LandingPage({
           errors={errors}
           onChange={onChange}
           onSubmit={onSubmit}
-          onLoadSample={onLoadSample}
         />
       </div>
 

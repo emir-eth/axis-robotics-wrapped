@@ -6,10 +6,7 @@ import { BrandPreloader } from "@/components/intro/BrandPreloader";
 import { CinematicIntro } from "@/components/intro/CinematicIntro";
 import { LandingPage } from "@/components/input/LandingPage";
 import { WrappedExperience } from "@/components/wrapped/WrappedExperience";
-import {
-  EMPTY_FORM_VALUES,
-  SAMPLE_FORM_VALUES,
-} from "@/lib/sample-data";
+import { EMPTY_FORM_VALUES } from "@/lib/sample-data";
 import type {
   AxisWrappedData,
   WrappedFormErrors,
@@ -46,11 +43,6 @@ export function AxisWrappedApp() {
     setPhase("story");
   }
 
-  function handleLoadSample() {
-    setValues(SAMPLE_FORM_VALUES);
-    setErrors({});
-  }
-
   function handleRestart() {
     setPhase("input");
     setSceneIndex(0);
@@ -78,7 +70,6 @@ export function AxisWrappedApp() {
             errors={errors}
             onChange={handleChange}
             onSubmit={handleSubmit}
-            onLoadSample={handleLoadSample}
           />
         </motion.div>
       ) : (
