@@ -97,131 +97,127 @@ export function WrappedForm({
             <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-axis-accent/80">
               Profile stats
             </p>
-            <p className="mt-0.5 text-xs text-white">
+            <p className="mt-0.5 text-xs text-white sm:text-sm">
               Enter Hub stats, then select your unlocked badges.
             </p>
           </div>
-          <p className="shrink-0 font-mono text-[11px] tabular-nums text-axis-accent">
+          <p className="shrink-0 font-mono text-xs tabular-nums text-axis-accent sm:text-sm">
             {unlockedCount} / {BADGES_TOTAL}
           </p>
         </div>
 
-        <div className="axis-scroll min-h-0 flex-1 overflow-y-auto px-4 py-3 sm:px-5 sm:py-4">
-          <div className="grid gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-6">
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-2.5">
-              {FIELDS.map((field, index) => {
-                const isUsername = field.key === "username";
-                return (
-                  <label
-                    key={field.key}
-                    className={cn("group block", isUsername && "sm:col-span-2")}
-                  >
-                    <span className="mb-1 flex items-center justify-between gap-2">
-                      <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white">
-                        {field.label}
-                      </span>
-                      {errors[field.key] && (
-                        <span className="text-[10px] text-axis-danger">
-                          {errors[field.key]}
-                        </span>
-                      )}
+        <div className="axis-scroll min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5">
+          <div className="mx-auto grid max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3.5">
+            {FIELDS.map((field, index) => {
+              const isUsername = field.key === "username";
+              return (
+                <label
+                  key={field.key}
+                  className={cn("group block", isUsername && "sm:col-span-2")}
+                >
+                  <span className="mb-1.5 flex items-center justify-between gap-2">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white sm:text-[11px]">
+                      {field.label}
                     </span>
-                    <div className="relative">
-                      <input
-                        value={values[field.key]}
-                        onChange={(event) =>
-                          onChange(field.key, event.target.value)
-                        }
-                        placeholder={field.placeholder}
-                        inputMode={field.inputMode}
-                        autoComplete="off"
-                        spellCheck={false}
-                        className={cn(
-                          "w-full rounded-sm border bg-black/35 px-3 py-2 text-sm text-axis-fg outline-none transition-[border-color,box-shadow] placeholder:text-axis-dim focus:border-axis-accent/45 focus:shadow-[0_0_0_1px_rgba(92,255,154,0.12)]",
-                          errors[field.key]
-                            ? "border-axis-danger/50"
-                            : "border-axis-line-strong",
-                          field.mono && "font-mono tabular-nums",
-                          field.suffix && "pr-8",
-                        )}
-                        style={{ animationDelay: `${index * 40}ms` }}
-                      />
-                      {field.suffix && (
-                        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 font-mono text-xs text-axis-dim">
-                          {field.suffix}
-                        </span>
+                    {errors[field.key] && (
+                      <span className="text-[10px] text-axis-danger">
+                        {errors[field.key]}
+                      </span>
+                    )}
+                  </span>
+                  <div className="relative">
+                    <input
+                      value={values[field.key]}
+                      onChange={(event) =>
+                        onChange(field.key, event.target.value)
+                      }
+                      placeholder={field.placeholder}
+                      inputMode={field.inputMode}
+                      autoComplete="off"
+                      spellCheck={false}
+                      className={cn(
+                        "w-full rounded-sm border bg-black/35 px-3.5 py-3 text-base text-axis-fg outline-none transition-[border-color,box-shadow] placeholder:text-axis-dim focus:border-axis-accent/45 focus:shadow-[0_0_0_1px_rgba(92,255,154,0.12)] sm:py-3.5 sm:text-[1.05rem]",
+                        errors[field.key]
+                          ? "border-axis-danger/50"
+                          : "border-axis-line-strong",
+                        field.mono && "font-mono tabular-nums",
+                        field.suffix && "pr-9",
                       )}
-                    </div>
-                  </label>
+                      style={{ animationDelay: `${index * 40}ms` }}
+                    />
+                    {field.suffix && (
+                      <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 font-mono text-sm text-axis-dim">
+                        {field.suffix}
+                      </span>
+                    )}
+                  </div>
+                </label>
+              );
+            })}
+          </div>
+
+          <div className="mx-auto mt-6 max-w-4xl border-t border-axis-line pt-5">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white sm:text-[11px]">
+                Your badges
+              </p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55 sm:text-[10px]">
+                Tap to select
+              </p>
+            </div>
+            {errors.badges && (
+              <p className="mb-2 text-[10px] text-axis-danger">{errors.badges}</p>
+            )}
+
+            <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-7 sm:gap-3">
+              {badges.map((badge) => {
+                const selected = isBadgeUnlocked(
+                  values.unlockedBadgeIds,
+                  badge.id,
+                );
+                return (
+                  <button
+                    key={badge.id}
+                    type="button"
+                    onClick={() => onToggleBadge(badge.id)}
+                    aria-pressed={selected}
+                    aria-label={badge.name}
+                    title={badge.name}
+                    className={cn(
+                      "relative aspect-square overflow-hidden rounded-sm border p-1.5 transition-[border-color,background-color,box-shadow,transform] hover:scale-[1.03] sm:p-2",
+                      selected
+                        ? "border-axis-accent/55 bg-axis-accent/[0.1] shadow-[0_0_16px_rgba(92,255,154,0.14)]"
+                        : "border-axis-line-strong bg-black/30 hover:border-axis-fg/30",
+                    )}
+                  >
+                    <img
+                      src={getBadgeSrc(badge.file)}
+                      alt=""
+                      width={96}
+                      height={96}
+                      decoding="async"
+                      draggable={false}
+                      className={cn(
+                        "h-full w-full scale-[1.14] object-contain select-none",
+                        selected
+                          ? "opacity-100"
+                          : "opacity-35 grayscale brightness-75",
+                      )}
+                    />
+                    {selected && (
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-x-1.5 top-0 h-px bg-gradient-to-r from-transparent via-axis-accent/70 to-transparent"
+                      />
+                    )}
+                  </button>
                 );
               })}
             </div>
-
-            <div>
-              <div className="mb-2 flex items-center justify-between gap-2">
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white">
-                  Your badges
-                </p>
-                <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
-                  Tap to select
-                </p>
-              </div>
-              {errors.badges && (
-                <p className="mb-2 text-[10px] text-axis-danger">
-                  {errors.badges}
-                </p>
-              )}
-
-              <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
-                {badges.map((badge) => {
-                  const selected = isBadgeUnlocked(
-                    values.unlockedBadgeIds,
-                    badge.id,
-                  );
-                  return (
-                    <button
-                      key={badge.id}
-                      type="button"
-                      onClick={() => onToggleBadge(badge.id)}
-                      aria-pressed={selected}
-                      aria-label={badge.name}
-                      title={badge.name}
-                      className={cn(
-                        "relative aspect-square overflow-hidden rounded-sm border p-1 transition-[border-color,background-color,box-shadow,transform] hover:scale-[1.03]",
-                        selected
-                          ? "border-axis-accent/55 bg-axis-accent/[0.1] shadow-[0_0_14px_rgba(92,255,154,0.14)]"
-                          : "border-axis-line-strong bg-black/30 hover:border-axis-fg/30",
-                      )}
-                    >
-                      <img
-                        src={getBadgeSrc(badge.file)}
-                        alt=""
-                        width={64}
-                        height={64}
-                        decoding="async"
-                        draggable={false}
-                        className={cn(
-                          "h-full w-full scale-[1.14] object-contain select-none",
-                          selected
-                            ? "opacity-100"
-                            : "opacity-35 grayscale brightness-75",
-                        )}
-                      />
-                      {selected && (
-                        <span
-                          aria-hidden
-                          className="pointer-events-none absolute inset-x-1 top-0 h-px bg-gradient-to-r from-transparent via-axis-accent/70 to-transparent"
-                        />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-              <p className="mt-2 text-[10px] leading-relaxed text-white/55">
-                Hover a badge to see its name. Select only the ones unlocked on
-                your Hub.
-              </p>
-            </div>
+            <p className="mt-3 text-[10px] leading-relaxed text-white/55 sm:text-[11px]">
+              Hover a badge to see its name. Select only the ones unlocked on
+              your Hub.
+            </p>
           </div>
         </div>
 
