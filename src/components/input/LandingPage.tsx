@@ -35,28 +35,24 @@ export function LandingPage({
       <AmbientBackground intensity="subtle" />
       <HeroTechnicalField />
 
-      <header className="relative z-20 flex shrink-0 items-center justify-between gap-3 px-4 py-3 sm:px-8 sm:py-4">
+      <header className="relative z-20 flex shrink-0 items-center justify-between gap-3 px-4 py-2.5 sm:px-8 sm:py-3">
         <AxisBrandMark size="header" />
         <OfficialLinksNav />
       </header>
 
-      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col justify-start overflow-y-auto px-4 pb-6 pt-2 sm:px-6 sm:pb-8 sm:pt-3">
+      <div className="axis-scroll relative z-10 mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col px-4 pb-3 pt-1 sm:px-6 sm:pb-4 sm:pt-2">
         <motion.div
-          className="mb-6 text-center sm:mb-7"
+          className="mb-3 shrink-0 text-center sm:mb-4"
           initial="hidden"
           animate="show"
           variants={staggerContainer}
         >
-          <motion.div
+          <motion.p
             variants={fadeUp}
-            className="mb-5 flex items-center justify-center gap-2.5 sm:mb-6"
+            className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-axis-accent/80 sm:text-[10px]"
           >
-            <span className="h-px w-6 bg-axis-accent/40 sm:w-8" />
-            <p className="max-w-md text-center font-mono text-[10px] uppercase leading-relaxed tracking-[0.14em] text-axis-accent/80 sm:text-[11px] sm:tracking-[0.16em]">
-              Built to visualize Axis Robotics community contributions
-            </p>
-            <span className="h-px w-6 bg-axis-accent/40 sm:w-8" />
-          </motion.div>
+            Built to visualize Axis Robotics community contributions
+          </motion.p>
 
           <motion.h1
             variants={fadeUp}
@@ -65,65 +61,56 @@ export function LandingPage({
             <span className="sr-only">AXIS ROBOTICS WRAPPED</span>
             <span
               aria-hidden
-              className="block text-[clamp(2rem,7.5vw,3.6rem)] font-semibold leading-[0.9] tracking-[-0.045em] text-axis-fg"
+              className="block text-[clamp(1.65rem,5.5vw,2.75rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-axis-fg"
             >
               <motion.span
-                className="block"
+                className="inline"
                 initial={
-                  reduced ? false : { opacity: 0, y: 28, filter: "blur(8px)" }
+                  reduced ? false : { opacity: 0, y: 16, filter: "blur(6px)" }
                 }
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.85, ease: EASE_OUT_EXPO }}
+                transition={{ duration: 0.75, ease: EASE_OUT_EXPO }}
               >
-                AXIS ROBOTICS
+                AXIS ROBOTICS{" "}
               </motion.span>
               <motion.span
-                className="mt-1.5 block text-axis-accent"
-                style={{
-                  textShadow: "0 0 60px rgba(92,255,154,0.18)",
-                }}
+                className="inline text-axis-accent"
+                style={{ textShadow: "0 0 48px rgba(92,255,154,0.18)" }}
                 initial={
-                  reduced ? false : { opacity: 0, y: 32, filter: "blur(10px)" }
+                  reduced ? false : { opacity: 0, y: 16, filter: "blur(6px)" }
                 }
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{
-                  duration: 0.9,
-                  delay: 0.12,
+                  duration: 0.8,
+                  delay: 0.08,
                   ease: EASE_OUT_EXPO,
                 }}
               >
                 WRAPPED
               </motion.span>
             </span>
-
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -left-3 -top-2 h-4 w-4 border-l border-t border-axis-fg/25 sm:-left-5 sm:-top-3 sm:h-5 sm:w-5"
-            />
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -bottom-2 -right-3 h-4 w-4 border-b border-r border-axis-accent/35 sm:-bottom-3 sm:-right-5 sm:h-5 sm:w-5"
-            />
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
-            className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-white sm:mt-6 sm:text-base"
+            className="mx-auto mt-2 max-w-lg text-xs leading-relaxed text-white sm:text-sm"
           >
             Turn your Axis Robotics journey into a shareable story.
           </motion.p>
         </motion.div>
 
-        <WrappedForm
-          values={values}
-          errors={errors}
-          onChange={onChange}
-          onToggleBadge={onToggleBadge}
-          onSubmit={onSubmit}
-        />
+        <div className="min-h-0 flex-1">
+          <WrappedForm
+            values={values}
+            errors={errors}
+            onChange={onChange}
+            onToggleBadge={onToggleBadge}
+            onSubmit={onSubmit}
+          />
+        </div>
       </div>
 
-      <CreatorFooter className="shrink-0 py-4 sm:py-5" />
+      <CreatorFooter className="shrink-0 py-2.5 sm:py-3" />
     </div>
   );
 }

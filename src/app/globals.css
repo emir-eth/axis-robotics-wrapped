@@ -136,6 +136,31 @@ input[type="number"] {
   color: rgba(243, 246, 243, 0.82);
 }
 
+.axis-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(92, 255, 154, 0.35) transparent;
+}
+
+.axis-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.axis-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.axis-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(92, 255, 154, 0.28);
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+.axis-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(92, 255, 154, 0.45);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .axis-grid-animated,
   .axis-scan {
