@@ -6,5 +6,5 @@ export const EMPTY_FORM_VALUES: WrappedFormValues = {
   verified: "",
   averageScore: "",
   points: "",
-  badgesUnlocked: "",
+  unlockedBadgeIds: [],
 };

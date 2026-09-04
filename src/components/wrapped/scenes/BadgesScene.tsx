@@ -1,7 +1,11 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { getBadgeSrc, getOrderedBadges } from "@/lib/badges";
+import {
+  getAllBadges,
+  getBadgeSrc,
+  isBadgeUnlocked,
+} from "@/lib/badges";
 import type { AxisWrappedData } from "@/lib/types";
 import { EASE_OUT_EXPO, springSoft } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -13,8 +17,8 @@ interface BadgesSceneProps {
 
 export function BadgesScene({ data }: BadgesSceneProps) {
   const reduced = useReducedMotion();
-  const badges = getOrderedBadges(data.badgesTotal);
-  const cols = Math.min(data.badgesTotal, 4);
+  const badges = getAllBadges();
+  const unlockedCount = data.unlockedBadgeIds.length;
 
   return (
     <SceneShell eyebrow="05 · Unlock">
@@ -24,18 +28,15 @@ export function BadgesScene({ data }: BadgesSceneProps) {
         transition={{ duration: 0.65, ease: EASE_OUT_EXPO }}
         className="stat-display font-mono text-[clamp(2.8rem,12vw,5rem)] text-axis-fg"
       >
-        {data.badgesUnlocked}
+        {unlockedCount}
         <span className="text-axis-dim"> / {data.badgesTotal}</span>
       </motion.p>
 
       <SceneLabel>Badges Unlocked</SceneLabel>
 
-      <div
-        className="mt-6 grid w-full max-w-3xl gap-4 sm:mt-7 sm:gap-5"
-        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
-      >
+      <div className="mt-5 grid w-full max-w-4xl grid-cols-4 gap-2.5 sm:mt-6 sm:grid-cols-7 sm:gap-3">
         {badges.map((badge, index) => {
-          const unlocked = index < data.badgesUnlocked;
+          const unlocked = isBadgeUnlocked(data.unlockedBadgeIds, badge.id);
 
           return (
             <motion.div
@@ -51,7 +52,7 @@ export function BadgesScene({ data }: BadgesSceneProps) {
                   ? { duration: 0.01 }
                   : {
                       ...springSoft,
-                      delay: 0.28 + index * 0.09,
+                      delay: 0.2 + index * 0.04,
                     }
               }
               className="relative"
@@ -59,7 +60,7 @@ export function BadgesScene({ data }: BadgesSceneProps) {
             >
               <div
                 className={cn(
-                  "relative aspect-square overflow-hidden rounded-sm border p-0 transition-[border-color,box-shadow,background-color] sm:p-0.5",
+                  "relative aspect-square overflow-hidden rounded-sm border p-0 transition-[border-color,box-shadow,background-color]",
                   unlocked
                     ? "border-axis-accent/45 bg-axis-accent/[0.07] shadow-[0_0_22px_rgba(92,255,154,0.12)]"
                     : "border-axis-line-strong/70 bg-black/30",
@@ -71,7 +72,7 @@ export function BadgesScene({ data }: BadgesSceneProps) {
                     className="pointer-events-none absolute inset-x-2 top-0 z-10 h-px bg-gradient-to-r from-transparent via-axis-accent/70 to-transparent"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.45 + index * 0.09 }}
+                    transition={{ delay: 0.35 + index * 0.04 }}
                   />
                 )}
 
@@ -100,8 +101,8 @@ export function BadgesScene({ data }: BadgesSceneProps) {
 
               <p
                 className={cn(
-                  "mt-2 line-clamp-2 text-center font-mono text-[9px] uppercase leading-snug tracking-[0.1em] sm:text-[10px]",
-                  unlocked ? "text-axis-muted" : "text-axis-dim/70",
+                  "mt-1.5 line-clamp-2 text-center font-mono text-[8px] uppercase leading-snug tracking-[0.08em] sm:text-[9px]",
+                  unlocked ? "text-white" : "text-axis-dim/70",
                 )}
               >
                 {badge.name}

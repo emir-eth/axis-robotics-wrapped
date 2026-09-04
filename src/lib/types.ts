@@ -4,12 +4,13 @@ export interface AxisWrappedData {
   verified: number;
   averageScore: number;
   points: number;
-  badgesUnlocked: number;
+  /** Explicit unlocked badge ids — order-independent */
+  unlockedBadgeIds: number[];
   badgesTotal: number;
 }
 
 /** Fixed badge total on Axis Hub — not user-editable. */
-export const BADGES_TOTAL = 8;
+export const BADGES_TOTAL = 14;
 
 export type WrappedPhase = "preloader" | "intro" | "input" | "story";
 
@@ -43,7 +44,9 @@ export type WrappedFormValues = {
   verified: string;
   averageScore: string;
   points: string;
-  badgesUnlocked: string;
+  unlockedBadgeIds: number[];
 };
 
-export type WrappedFormErrors = Partial<Record<keyof WrappedFormValues, string>>;
+export type WrappedFormErrors = Partial<
+  Record<Exclude<keyof WrappedFormValues, "unlockedBadgeIds"> | "badges", string>
+>;

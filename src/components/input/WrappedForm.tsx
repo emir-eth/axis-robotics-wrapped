@@ -1,13 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { getAllBadges, getBadgeSrc, isBadgeUnlocked } from "@/lib/badges";
 import type { WrappedFormErrors, WrappedFormValues } from "@/lib/types";
 import { BADGES_TOTAL } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { GlowButton } from "@/components/ui/GlowButton";
 
 interface FieldConfig {
-  key: keyof WrappedFormValues;
+  key: Exclude<keyof WrappedFormValues, "unlockedBadgeIds">;
   label: string;
   placeholder: string;
   inputMode?: "text" | "decimal" | "numeric";
@@ -51,19 +52,16 @@ const FIELDS: FieldConfig[] = [
     inputMode: "numeric",
     mono: true,
   },
-  {
-    key: "badgesUnlocked",
-    label: "Badges unlocked",
-    placeholder: "4",
-    inputMode: "numeric",
-    mono: true,
-  },
 ];
 
 interface WrappedFormProps {
   values: WrappedFormValues;
   errors: WrappedFormErrors;
-  onChange: (key: keyof WrappedFormValues, value: string) => void;
+  onChange: (
+    key: Exclude<keyof WrappedFormValues, "unlockedBadgeIds">,
+    value: string,
+  ) => void;
+  onToggleBadge: (badgeId: number) => void;
   onSubmit: () => void;
 }
 
@@ -71,8 +69,12 @@ export function WrappedForm({
   values,
   errors,
   onChange,
+  onToggleBadge,
   onSubmit,
 }: WrappedFormProps) {
+  const badges = getAllBadges();
+  const unlockedCount = values.unlockedBadgeIds.length;
+
   return (
     <motion.form
       onSubmit={(event) => {
@@ -152,19 +154,71 @@ export function WrappedForm({
               </label>
             );
           })}
+        </div>
 
-          <div className="block">
-            <span className="mb-1 flex items-center justify-between gap-2">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white">
-                Badges total
-              </span>
-            </span>
-            <div
-              aria-readonly="true"
-              className="w-full cursor-default rounded-sm border border-axis-line-strong bg-black/20 px-3 py-2.5 font-mono text-sm tabular-nums text-axis-fg/70 select-none"
-            >
-              {BADGES_TOTAL}
+        <div className="mt-4">
+          <div className="mb-2 flex items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white">
+                Your badges
+              </p>
+              <p className="mt-0.5 text-[11px] text-white/70">
+                Tap the badges you have unlocked on Hub.
+              </p>
             </div>
+            <p className="shrink-0 font-mono text-[11px] tabular-nums text-axis-accent">
+              {unlockedCount} / {BADGES_TOTAL}
+            </p>
+          </div>
+          {errors.badges && (
+            <p className="mb-2 text-[10px] text-axis-danger">{errors.badges}</p>
+          )}
+
+          <div className="grid grid-cols-4 gap-2 sm:grid-cols-7 sm:gap-2.5">
+            {badges.map((badge) => {
+              const selected = isBadgeUnlocked(
+                values.unlockedBadgeIds,
+                badge.id,
+              );
+              return (
+                <button
+                  key={badge.id}
+                  type="button"
+                  onClick={() => onToggleBadge(badge.id)}
+                  aria-pressed={selected}
+                  title={badge.name}
+                  className={cn(
+                    "group relative flex flex-col items-center gap-1 rounded-sm border p-1.5 transition-[border-color,background-color,box-shadow]",
+                    selected
+                      ? "border-axis-accent/50 bg-axis-accent/[0.08] shadow-[0_0_16px_rgba(92,255,154,0.1)]"
+                      : "border-axis-line-strong bg-black/25 hover:border-axis-fg/25",
+                  )}
+                >
+                  <img
+                    src={getBadgeSrc(badge.file)}
+                    alt=""
+                    width={72}
+                    height={72}
+                    decoding="async"
+                    draggable={false}
+                    className={cn(
+                      "aspect-square w-full scale-[1.12] object-contain select-none",
+                      selected
+                        ? "opacity-100"
+                        : "opacity-35 grayscale brightness-75",
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "line-clamp-2 min-h-[2.2em] text-center font-mono text-[8px] uppercase leading-tight tracking-[0.04em]",
+                      selected ? "text-white" : "text-white/45",
+                    )}
+                  >
+                    {badge.name}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 

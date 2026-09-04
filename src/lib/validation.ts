@@ -4,6 +4,7 @@ import type {
   WrappedFormValues,
 } from "./types";
 import { BADGES_TOTAL } from "./types";
+import { getAllBadges } from "./badges";
 
 function parseRequiredNumber(
   raw: string,
@@ -39,6 +40,7 @@ export function validateWrappedForm(
   values: WrappedFormValues,
 ): { data?: AxisWrappedData; errors: WrappedFormErrors } {
   const errors: WrappedFormErrors = {};
+  const validIds = new Set(getAllBadges().map((badge) => badge.id));
 
   const username = values.username.trim().replace(/^@/, "");
   if (!username) {
@@ -70,12 +72,17 @@ export function validateWrappedForm(
   });
   if (points.error) errors.points = points.error;
 
-  const badgesUnlocked = parseRequiredNumber(
-    values.badgesUnlocked,
-    "Badges unlocked",
-    { min: 0, max: BADGES_TOTAL, integer: true },
-  );
-  if (badgesUnlocked.error) errors.badgesUnlocked = badgesUnlocked.error;
+  const unlockedBadgeIds = [
+    ...new Set(
+      values.unlockedBadgeIds.filter(
+        (id) => Number.isInteger(id) && validIds.has(id),
+      ),
+    ),
+  ].sort((a, b) => a - b);
+
+  if (unlockedBadgeIds.length > BADGES_TOTAL) {
+    errors.badges = `Select at most ${BADGES_TOTAL} badges`;
+  }
 
   if (Object.keys(errors).length > 0) {
     return { errors };
@@ -89,7 +96,7 @@ export function validateWrappedForm(
       verified: verified.value!,
       averageScore: averageScore.value!,
       points: points.value!,
-      badgesUnlocked: badgesUnlocked.value!,
+      unlockedBadgeIds,
       badgesTotal: BADGES_TOTAL,
     },
   };

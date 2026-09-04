@@ -26,7 +26,7 @@ export function SummaryScene({ data, onRestart }: SummarySceneProps) {
     { label: "Avg Score", value: formatDecimal(data.averageScore) },
     {
       label: "Badges",
-      value: `${data.badgesUnlocked} / ${data.badgesTotal}`,
+      value: `${data.unlockedBadgeIds.length} / ${data.badgesTotal}`,
     },
     { label: "Points", value: formatInteger(data.points) },
   ];

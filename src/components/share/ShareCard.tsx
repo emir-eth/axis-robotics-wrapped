@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef } from "react";
-import { getBadgeSrc, getOrderedBadges } from "@/lib/badges";
+import { getAllBadges, getBadgeSrc, isBadgeUnlocked } from "@/lib/badges";
 import type { AxisWrappedData } from "@/lib/types";
 import { formatDecimal, formatInteger } from "@/lib/utils";
 
@@ -17,7 +17,8 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
       { label: "Avg Score", value: formatDecimal(data.averageScore) },
       { label: "Points", value: formatInteger(data.points) },
     ];
-    const badges = getOrderedBadges(data.badgesTotal);
+    const badges = getAllBadges();
+    const unlockedCount = data.unlockedBadgeIds.length;
 
     return (
       <div
@@ -247,14 +248,14 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
               style={{
                 marginTop: 8,
                 borderTop: "1px solid rgba(243,246,243,0.12)",
-                paddingTop: 18,
+                paddingTop: 14,
                 display: "flex",
                 alignItems: "flex-start",
                 justifyContent: "space-between",
-                gap: 24,
+                gap: 18,
               }}
             >
-              <div style={{ flexShrink: 0, paddingTop: 6 }}>
+              <div style={{ flexShrink: 0, paddingTop: 4 }}>
                 <div
                   style={{
                     fontFamily: "var(--font-mono), 'JetBrains Mono', monospace",
@@ -268,45 +269,46 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
                 </div>
                 <div
                   style={{
-                    marginTop: 10,
+                    marginTop: 8,
                     fontFamily: "var(--font-mono), 'JetBrains Mono', monospace",
-                    fontSize: 34,
+                    fontSize: 30,
                     fontWeight: 600,
                     letterSpacing: "-0.045em",
                     fontVariantNumeric: "tabular-nums",
                     color: "#f3f6f3",
                   }}
                 >
-                  {data.badgesUnlocked} / {data.badgesTotal}
+                  {unlockedCount} / {data.badgesTotal}
                 </div>
               </div>
 
               <div
                 style={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: 4,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
+                  gap: 8,
                   flex: 1,
-                  justifyContent: "flex-end",
                 }}
               >
-                {badges.map((badge, index) => {
-                  const unlocked = index < data.badgesUnlocked;
+                {badges.map((badge) => {
+                  const unlocked = isBadgeUnlocked(
+                    data.unlockedBadgeIds,
+                    badge.id,
+                  );
                   return (
                     <div
                       key={badge.id}
                       style={{
-                        width: 118,
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                        gap: 5,
+                        gap: 4,
                       }}
                     >
                       <div
                         style={{
-                          width: 114,
-                          height: 114,
+                          width: "100%",
+                          aspectRatio: "1 / 1",
                           borderRadius: 3,
                           border: unlocked
                             ? "1px solid rgba(92,255,154,0.4)"
@@ -321,8 +323,8 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
                         <img
                           src={getBadgeSrc(badge.file)}
                           alt={badge.name}
-                          width={110}
-                          height={110}
+                          width={72}
+                          height={72}
                           style={{
                             width: "100%",
                             height: "100%",
@@ -339,15 +341,15 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
                         style={{
                           fontFamily:
                             "var(--font-mono), 'JetBrains Mono', monospace",
-                          fontSize: 8,
-                          letterSpacing: "0.05em",
+                          fontSize: 7,
+                          letterSpacing: "0.04em",
                           textTransform: "uppercase",
                           textAlign: "center",
-                          lineHeight: 1.2,
+                          lineHeight: 1.15,
                           color: unlocked
                             ? "#ffffff"
                             : "rgba(255,255,255,0.45)",
-                          maxWidth: 118,
+                          maxWidth: "100%",
                           overflow: "hidden",
                           display: "-webkit-box",
                           WebkitLineClamp: 2,

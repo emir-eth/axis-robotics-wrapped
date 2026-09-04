@@ -22,12 +22,34 @@ export function AxisWrappedApp() {
   const [data, setData] = useState<AxisWrappedData | null>(null);
   const [sceneIndex, setSceneIndex] = useState(0);
 
-  function handleChange(key: keyof WrappedFormValues, value: string) {
+  function handleChange(
+    key: Exclude<keyof WrappedFormValues, "unlockedBadgeIds">,
+    value: string,
+  ) {
     setValues((current) => ({ ...current, [key]: value }));
     if (errors[key]) {
       setErrors((current) => {
         const next = { ...current };
         delete next[key];
+        return next;
+      });
+    }
+  }
+
+  function handleToggleBadge(badgeId: number) {
+    setValues((current) => {
+      const exists = current.unlockedBadgeIds.includes(badgeId);
+      return {
+        ...current,
+        unlockedBadgeIds: exists
+          ? current.unlockedBadgeIds.filter((id) => id !== badgeId)
+          : [...current.unlockedBadgeIds, badgeId],
+      };
+    });
+    if (errors.badges) {
+      setErrors((current) => {
+        const next = { ...current };
+        delete next.badges;
         return next;
       });
     }
@@ -69,6 +91,7 @@ export function AxisWrappedApp() {
             values={values}
             errors={errors}
             onChange={handleChange}
+            onToggleBadge={handleToggleBadge}
             onSubmit={handleSubmit}
           />
         </motion.div>

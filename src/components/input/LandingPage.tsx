@@ -13,7 +13,11 @@ import type { WrappedFormErrors, WrappedFormValues } from "@/lib/types";
 interface LandingPageProps {
   values: WrappedFormValues;
   errors: WrappedFormErrors;
-  onChange: (key: keyof WrappedFormValues, value: string) => void;
+  onChange: (
+    key: Exclude<keyof WrappedFormValues, "unlockedBadgeIds">,
+    value: string,
+  ) => void;
+  onToggleBadge: (badgeId: number) => void;
   onSubmit: () => void;
 }
 
@@ -21,6 +25,7 @@ export function LandingPage({
   values,
   errors,
   onChange,
+  onToggleBadge,
   onSubmit,
 }: LandingPageProps) {
   const reduced = useReducedMotion();
@@ -35,7 +40,7 @@ export function LandingPage({
         <OfficialLinksNav />
       </header>
 
-      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-xl flex-1 flex-col justify-start overflow-hidden px-4 pb-6 pt-2 sm:px-6 sm:pb-8 sm:pt-3">
+      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col justify-start overflow-y-auto px-4 pb-6 pt-2 sm:px-6 sm:pb-8 sm:pt-3">
         <motion.div
           className="mb-6 text-center sm:mb-7"
           initial="hidden"
@@ -113,6 +118,7 @@ export function LandingPage({
           values={values}
           errors={errors}
           onChange={onChange}
+          onToggleBadge={onToggleBadge}
           onSubmit={onSubmit}
         />
       </div>
